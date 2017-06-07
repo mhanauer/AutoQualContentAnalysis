@@ -64,15 +64,21 @@ Ok now we have the data in text files, we need to create a date file with three 
 
 
 ```{r}
+both = both[c("Q3")]
+names(both) = c("~/Desktop/QualAuto")
+head(both)
+
 set.seed(1)
-Season <- replicate(10, rnorm(1, 0, 1))  # the returned object is a matrix
+Season <- replicate(405, rnorm(1, 0, 1))  # the returned object is a matrix
 Season = as.data.frame(t(Season))
 dim(Season)
-colnames(Season) <- paste0("Season", 1:ncol(Season))
-Season
+names(Season) <- paste0("~/Desktop/QualAuto/", 1:ncol(Season), ".txt")
 library(reshape2)
-melt(Season, id.vars = 1)
-mytime
+both1 = melt(Season, id.vars = 1)
+both1 = both1$variable
+head(both1)
+
+
 undergrad.results = undergrad(sep = ',')
 
 undergrad.preprocess <- preprocess(undergrad.results)
