@@ -67,19 +67,46 @@ Ok now we have the data in text files, we need to create a date file with three 
 both = both[c("Q3")]
 names(both) = c("~/Desktop/QualAuto")
 head(both)
-
+# So here we are creating a dataset the same number values as the both data set
 set.seed(1)
-Season <- replicate(405, rnorm(1, 0, 1))  # the returned object is a matrix
-Season = as.data.frame(t(Season))
-dim(Season)
-names(Season) <- paste0("~/Desktop/QualAuto/", 1:ncol(Season), ".txt")
+both1 <- replicate(405, rnorm(1, 0, 1))  # the returned object is a matrix
+# Need to transpose this for some reason not sure why maybe get the columns in the right order?
+both1 = as.data.frame(t(both1))
+# Here we are pasting the pieces together
+names(both1) <- paste0("~/Desktop/QualAuto/", 1:ncol(both1), ".txt")
 library(reshape2)
-both1 = melt(Season, id.vars = 1)
+# Now we taking what were the column headers and placing into a variable, but we lose the first value so need to add the back
+both1 = melt(both1, id.vars = 1)
 both1 = both1$variable
-head(both1)
-
-
-undergrad.results = undergrad(sep = ',')
+# We are getting only the variable that we want and renaming it.
+write.csv(both1, "both1.csv")
+both1 = read.csv("both1.csv", header = TRUE)
+both1 = as.data.frame(both1)
+both1 = both1[c("x")]
+colnames(both1) = c("filename")
+filename = both1$filename
+filename = as.data.frame(filename)
+dim(filename)
+```
+Now we need to create the file the can be read by the readme package
+```{r}
+# Need three sets of truth.  One for the possible values which are 1 and 2 in this case and then rest are NA's so we can cbind them later without an problems.
+truth1 =  data.frame(a = rep(c(1,2),25))
+truth1 = as.data.frame(truth1)
+truth2 = data.frame(a = rep(NA, 404-50))
+truth2 = as.data.frame(truth2)
+truth = rbind(truth1, truth2)
+names(truth) = c("truth")
+truth$truth
+trainingset1 = data.frame(a = rep(1,50))
+trainingset1 = as.data.frame(trainingset1)
+trainingset2 = data.frame(a = rep(0, 404-50))
+trainingset2 = as.data.frame(trainingset2)
+trainingset = rbind(trainingset1, trainingset2)
+names(trainingset) = c("trainingset")
+control = cbind(filename, truth, trainingset)
+write.csv(control, "control.csv")
+undergrad.results = undergrad(control = )
 
 undergrad.preprocess <- preprocess(undergrad.results)
 undergrad.preprocess$trainingset$FILENAME
