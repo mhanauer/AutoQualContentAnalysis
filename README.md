@@ -3,6 +3,8 @@ title: "AutoContentAnalysis"
 output: html_document
 ---
 
+Ok so instead of using numbers we can use categories and then assign certain texts to categories and then have the computer do the rest.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -14,15 +16,15 @@ install_github("iqss-research/ReadMeV1")
 library(ReadMe)
 
 demo(clinton)
-oldwd <- getwd()
-setwd(system.file("demofiles/clintonposts", package="ReadMe"))
+setwd("~/Desktop")
+setwd(system.file("QualAuto", package="ReadMe"))
 undergrad.results = undergrad(sep = ',')
 
 undergrad.preprocess <- preprocess(undergrad.results)
 undergrad.preprocess$trainingset$FILENAME
 readme.results <- readme(undergrad.preprocess)
 setwd(oldwd)
-readme.results
+readme.results$true.CSMF
 
 
 ```
@@ -58,3 +60,23 @@ library(devtools)
 source_url("https://gist.github.com/benmarwick/9266072/raw/csv2txts.R")
 csv2txt("~/Desktop/QualAuto", labels = 1)
 ```
+Ok now we have the data in text files, we need to create a date file with three columns, filename, truth, and trainingset.  So how do I put the files together?  First what does undergrad do?  Ok first need to create a filename with the path and name for each of the variables  
+
+
+```{r}
+set.seed(1)
+Season <- replicate(10, rnorm(1, 0, 1))  # the returned object is a matrix
+Season = as.data.frame(t(Season))
+dim(Season)
+colnames(Season) <- paste0("Season", 1:ncol(Season))
+Season
+library(reshape2)
+melt(Season, id.vars = 1)
+mytime
+undergrad.results = undergrad(sep = ',')
+
+undergrad.preprocess <- preprocess(undergrad.results)
+undergrad.preprocess$trainingset$FILENAME
+readme.results <- readme(undergrad.preprocess)
+```
+
