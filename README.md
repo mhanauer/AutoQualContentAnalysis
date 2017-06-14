@@ -31,7 +31,7 @@ First we need to take each of the word files and turn them into text files
 ```{r}
 library(devtools)
 source_url("https://gist.github.com/benmarwick/9266072/raw/csv2txts.R")
-csv2txt("~/Desktop/QualAuto", labels = 1)
+csv2txt( , "~/Desktop/QualAuto", labels = 1)
 ```
 
 
@@ -46,11 +46,17 @@ rbbcsc = read.csv("RBBCSCStaffSurvey.csv", header = TRUE); head(rbbcsc)
 rbbcsc = as.data.frame(rbbcsc); head(rbbcsc)
 mccsc = read.csv("MCCSCStaffSurvey.csv", header = TRUE); head(mccsc)
 
-rbbcsc2 = rbbcsc[c("Q3")]
-rbbcsc2 = as.data.frame(rbbcsc2)
-
 mccsc2 = mccsc[c("Q3")]
-mccsc2 = as.data.frame(mccsc2)
+mccsc2 = mccsc2[-c(1:2), ]
+mccsc2 = as.matrix(mccsc2)
+
+
+rbbcsc1 = rbbcsc[c("Q3")]
+rbbcsc2 = rbbcsc1[-c(1:2), ]
+rbbcsc2 = as.matrix(rbbcsc2)
+
+both = rbind(mccsc2, rbbcsc2)
+dim(both)
 
 both = rbind(mccsc2, rbbcsc2)
 write.csv(both, "both.csv")
@@ -72,7 +78,8 @@ both1 <- replicate(405, rnorm(1, 0, 1))  # the returned object is a matrix
 # Need to transpose this for some reason not sure why maybe get the columns in the right order?
 both1 = as.data.frame(t(both1))
 # Here we are pasting the pieces together
-names(both1) <- paste0( "/Users/matthewhanauer/Desktop/QualAuto",1:ncol(both1), ".txt")
+dim(both1)
+names(both1) <- paste0( "/Users/matthewhanauer/Desktop/QualAuto/",1:404, ".txt")
 library(reshape2)
 # Now we taking what were the column headers and placing into a variable, but we lose the first value so need to add the back
 both1 = melt(both1, id.vars = 1)
@@ -116,12 +123,6 @@ Two ways to possibly fix this.  First is figure out how to create a comma separa
 Second is to figure out how they are setting the directory.
 ```{r}
 
-mydirname <- tempfile(pattern = "mydir")
-file.exists(mydirname)
-
-oldwd <- getwd()
-setwd(system.file("demofiles/clintonposts", package="ReadMe"))
-getwd()
 setwd("~/Desktop/QualAuto")
 undergrad.results = undergrad(sep = ',')
 undergrad.preprocess <- preprocess(undergrad.results)
