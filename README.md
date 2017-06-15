@@ -84,11 +84,13 @@ head(control)
 Finally, we can analyze the data using the ReadMe package, which is very straightforward.  First, we need to set the working directory to the location of the txt and control files.  Then we can use the undergrad function to create a data set with each word written in the files and a binary indicator indicating whether or not the word was written in that survey response.  Then we further process the data by removing the training data set.  Finally, we have the readme function which calculates the percentage of the rows (i.e. the survey responses in this example) that fall into particular categories.  The final result is found in est.CSMF which shows that .44 of the data would fall into category 1 while  .56 of the data would fall into category 2. 
 ```{r}
 
+library(ReadMe)
 setwd("~/Desktop/QualAuto")
 undergrad.results = undergrad(sep = ',')
-head(undergrad.results$trainingset)
+
 undergrad.preprocess <- preprocess(undergrad.results)
-readme.results <- readme(undergrad.preprocess)
+readme.results <- readme(undergrad.preprocess, boot.se = TRUE)
 readme.results$est.CSMF
+readme.results$CSMF.se
 ```
 
